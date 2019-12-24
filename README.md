@@ -78,7 +78,7 @@ R hat is the above equation, multiplication of user vector and transpose of movi
 #### 3. Train a model built with "Objective Function" using Stochastic Gradient Descent
 
 ```python
-# Stochastic Gradient using numba
+# Stochastic Gradient using numba to boost training speed
 @njit
 def stochastic_gradient(user_item, users, user_count, movies, learning_rate, regular_term):
     for user in prange(user_count):
@@ -93,7 +93,7 @@ def stochastic_gradient(user_item, users, user_count, movies, learning_rate, reg
             users[user, :] = users[user, :] + delta_user * learning_rate
 ```
 
-Model-based CF uses SGD(Stochastic Gradient Descent) to optimize the model.  SGD enables to train a model faster than a normal gradient descent. 
+The model-based CF uses SGD(Stochastic Gradient Descent) to optimize the model. SGD enables to train a model faster than a normal gradient descent. Especially for model-based CF, SGD performs well to train users and movies because of the data sparsity. The whole dataset is massive, but it is only about hundreds ratings for each user and movie. Numba is JIT compiler converting Python into machine code for speed up.
 
 
 
