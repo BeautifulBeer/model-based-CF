@@ -14,6 +14,16 @@ The only thing we have to do before running this model is to install packages su
 
 
 
+### Prerequisites
+
+What things you need to install the program and how to install them
+
+- Grouplens dataset
+  - Download "ml-latest.zip" dataset through https://grouplens.org/datasets/movielens/ and unzip the file into the local git repository.
+- Create model directory
+
+<img src="img/directory.png" height="250" align="center">
+
 ### Installing
 
 ```bash
@@ -23,13 +33,9 @@ pip3 install -r requirements.txt
 
 
 
-## Running the tests
+### Running the tests
 
-
-
-
-
-### Break down into end to end tests
+`Model-based-Collaborative-Filtering.ipynb` includes testing code. The only thing you have to do is to execute code.
 
 
 
@@ -63,7 +69,7 @@ Model-based CF enables to train latent features of users and items from massive 
 
 
 
-<img src="img/loss_brief.png">
+<img src="img/loss_brief.png" align="center">
 
 R hat is the above equation, multiplication of user vector and transpose of movie vector. Final goal of this model is minimize the "Loss" through the training step.  
 
@@ -71,14 +77,14 @@ R hat is the above equation, multiplication of user vector and transpose of movi
 
 #### 2. Define "Objective Function" based on 1
 
-<img src="img/loss_detail.png">
+<img src="img/loss_detail.png" align="center">
 
 
 
 #### 3. Train a model built with "Objective Function" using Stochastic Gradient Descent
 
 ```python
-# Stochastic Gradient using numba
+# Stochastic Gradient using numba to boost training speed
 @njit
 def stochastic_gradient(user_item, users, user_count, movies, learning_rate, regular_term):
     for user in prange(user_count):
@@ -93,7 +99,7 @@ def stochastic_gradient(user_item, users, user_count, movies, learning_rate, reg
             users[user, :] = users[user, :] + delta_user * learning_rate
 ```
 
-Model-based CF uses SGD(Stochastic Gradient Descent) to optimize the model.  SGD enables to train a model faster than a normal gradient descent. 
+The model-based CF uses SGD(Stochastic Gradient Descent) to optimize the model. SGD enables to train a model faster than a normal gradient descent. Especially for model-based CF, SGD performs well to train users and movies because of the data sparsity. The whole dataset is massive, but it is only about hundreds ratings for each user and movie. Numba is JIT compiler converting Python into machine code for speed up.
 
 
 
@@ -101,7 +107,7 @@ Model-based CF uses SGD(Stochastic Gradient Descent) to optimize the model.  SGD
 
 
 
-<img src="img/rating.png" height="80">
+<img src="img/rating.png" height="80" align="center">
 
 The Item i rating of the user u is calculated by the above equation.
 
