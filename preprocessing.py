@@ -27,14 +27,19 @@ def build_adjacency_matrix(df, userMapper, movieMapper):
             key_type=types.int64,
             value_type=types.float64[:, :]
     )
-    for row in df.index:
-        userId = userMapper[int(df.iloc[row].userId)]
-        movieId = movieMapper[int(df.iloc[row].movieId)]
-        rating = df.iloc[row].rating
-        if userId not in user_item:
-            user_item[userId] = np.array([[movieId, rating]], dtype=np.float64)
-        else:
-            user_item[userId] = np.concatenate((user_item[userId], np.array([[movieId, rating]], dtype=np.float64)), axis=0)
+    if os.path.isfile('./model/user_item.json'):
+        user_item_json = json.loads(open('./model/user_item.json').read())
+        for key, value in user_item_json.items():
+            user_item[key] = np.array(value, dtype=np.float64)
+    else:
+        for row in df.index:
+            userId = userMapper[int(df.iloc[row].userId)]
+            movieId = movieMapper[int(df.iloc[row].movieId)]
+            rating = df.iloc[row].rating
+            if userId not in user_item:
+                user_item[userId] = np.array([[movieId, rating]], dtype=np.float64)
+            else:
+                user_item[userId] = np.concatenate((user_item[userId], np.array([[movieId, rating]], dtype=np.float64)), axis=0)
     return user_item
 
 # movieId convert to new index
